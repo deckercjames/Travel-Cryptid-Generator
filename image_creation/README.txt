@@ -1,0 +1,1 @@
+This is just an affinity designer file I used to create the resource images.
