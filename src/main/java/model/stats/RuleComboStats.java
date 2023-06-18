@@ -1,8 +1,8 @@
-package model.stats;
+package main.java.model.stats;
 
-import model.game.board.Board;
-import model.model.Rule;
-import model.game.hexs.HexLocation;
+import main.java.model.game.board.Board;
+import main.java.model.model.Rule;
+import main.java.model.game.hexs.HexLocation;
 
 import java.util.Set;
 

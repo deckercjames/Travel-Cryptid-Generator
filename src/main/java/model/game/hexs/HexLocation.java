@@ -1,4 +1,4 @@
-package model.game.hexs;
+package main.java.model.game.hexs;
 
 import java.awt.*;
 import java.util.*;
@@ -18,14 +18,10 @@ public class HexLocation{
 
     private final int x, y, z;
 
-    private final static double cos30 = Math.cos(Math.toRadians(30));
     public Dimension getPosition2D(int xSize){
         final int ySize = (int) ((int) (xSize / 2) * Math.sqrt(3));
         int x = (int) (this.x * xSize * 0.75);
         int y = (int) ((Math.abs(this.y) - (this.x / 2.0))  * ySize );
-//        xSize /= 4;
-//        int x = (int) (xSize * (     3./2 * this.x                    ));
-//        int y = (int) (xSize * (Math.sqrt(3)/2 * this.x  +  Math.sqrt(3) * this.y * -1));
         return new Dimension(x, y);
     }
 

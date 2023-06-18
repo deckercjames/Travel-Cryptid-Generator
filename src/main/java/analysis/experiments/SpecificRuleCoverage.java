@@ -1,8 +1,8 @@
-package analysis.experiments;
+package main.java.analysis.experiments;
 
-import analysis.superclasses.AnalyserHistogram;
-import model.game.board.Board;
-import model.model.RuleManager;
+import main.java.analysis.superclasses.AnalyserHistogram;
+import main.java.model.game.board.Board;
+import main.java.model.model.RuleManager;
 
 import java.util.Arrays;
 

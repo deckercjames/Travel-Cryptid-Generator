@@ -1,6 +1,6 @@
-package view.boardview;
+package main.java.view.boardview;
 
-import model.game.board.Board;
+import main.java.model.game.board.Board;
 
 import java.io.File;
 

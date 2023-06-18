@@ -1,12 +1,12 @@
-package view.stats;
+package main.java.view.stats;
 
-import model.model.Model;
-import model.stats.MultiTrialRulesComboStats;
-import model.stats.RuleComboStats;
+// import main.java.model.model.Model;
+// import main.java.model.stats.MultiTrialRulesComboStats;
+// import main.java.model.stats.RuleComboStats;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+// import java.io.BufferedWriter;
+// import java.io.File;
+// import java.io.FileWriter;
 
 public class RuleComboFile {
 

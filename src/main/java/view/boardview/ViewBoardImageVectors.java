@@ -1,8 +1,8 @@
-package view.boardview;
+package main.java.view.boardview;
 
-import fileio.Settings;
-import model.game.board.Board;
-import model.game.hexs.*;
+import main.java.fileio.Settings;
+import main.java.model.game.board.Board;
+import main.java.model.game.hexs.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -1,11 +1,10 @@
-package model.model;
+package main.java.model.model;
 
-import model.game.hexs.HexLocation;
+import main.java.model.game.hexs.HexLocation;
 
-import java.io.Serializable;
 import java.util.*;
 
-public class RuleCombo extends HashSet<Rule> implements Serializable {
+public class RuleCombo extends HashSet<Rule> {
 
 
     RuleCombo(RuleCombo combo) {

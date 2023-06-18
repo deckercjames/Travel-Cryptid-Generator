@@ -1,4 +1,4 @@
-package analysis.superclasses;
+package main.java.analysis.superclasses;
 
 public abstract class AnalyserMultiPlayer extends Analyser {
 

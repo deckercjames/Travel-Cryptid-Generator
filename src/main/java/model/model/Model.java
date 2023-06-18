@@ -1,7 +1,7 @@
-package model.model;
+package main.java.model.model;
 
-import model.game.board.Board;
-import model.game.board.BoardSectioned;
+import main.java.model.game.board.Board;
+import main.java.model.game.board.BoardSectioned;
 
 import java.util.*;
 
@@ -31,7 +31,7 @@ public class Model {
         System.out.println("  Assigning hexes to Rules");
 
         //Make assign hexes to rules
-        for(Rule rule : ruleManager.getAllRules()){
+        for(Rule rule : RuleManager.getAllRules()){
 //            System.out.println("  Assigning rule "+rule);
             rule.clearHexes();
             board.assignHexesToRule(rule);

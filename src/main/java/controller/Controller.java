@@ -1,14 +1,14 @@
-package controller;
+package main.java.controller;
 
-import model.game.hexs.HexLocation;
-import model.model.Model;
-import model.model.Rule;
-import model.model.RuleCombo;
-import view.boardview.ViewBoard;
-import view.boardview.ViewBoardImageVectors;
-import view.gui.ViewGUI;
-import view.ruleview.RuleView;
-import view.ruleview.RuleViewPDF;
+import main.java.model.game.hexs.HexLocation;
+import main.java.model.model.Model;
+import main.java.model.model.Rule;
+import main.java.model.model.RuleCombo;
+import main.java.view.boardview.ViewBoard;
+import main.java.view.boardview.ViewBoardImageVectors;
+import main.java.view.gui.ViewGUI;
+import main.java.view.ruleview.RuleView;
+import main.java.view.ruleview.RuleViewPDF;
 
 import javax.swing.*;
 import java.io.File;
@@ -24,14 +24,14 @@ public class Controller{
     private Map<Integer, RuleCombo> completeRuleCombos;
 
     public void makeGUI(){
-        ViewGUI viewGUI = new ViewGUI();
+        new ViewGUI();
     }
 
     public void printPossibleSolutionsBoard(int numPlayers, boolean hardMode){
 
         model.initializeRandomBoard();
 
-        ViewBoard viewBoard = new ViewBoardImageVectors();
+        new ViewBoardImageVectors();
 
         //get the valid solutions from the rules combos
         Set<HexLocation> validSolutions = new HashSet<>(300);
@@ -66,7 +66,7 @@ public class Controller{
     }
 
     public void testBoardImage(String outputFolder){
-        ViewBoard boardViewBoard = new ViewBoardImageVectors();
+        new ViewBoardImageVectors();
 
         model.initializeRandomBoard();
 

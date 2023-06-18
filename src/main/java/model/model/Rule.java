@@ -1,6 +1,6 @@
-package model.model;
+package main.java.model.model;
 
-import model.game.hexs.*;
+import main.java.model.game.hexs.*;
 
 import java.io.Serializable;
 import java.util.Iterator;

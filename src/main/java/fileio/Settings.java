@@ -1,10 +1,10 @@
-package fileio;
+package main.java.fileio;
 
-import model.game.hexs.Animal;
-import model.game.hexs.HexTag;
-import model.game.hexs.StructureColor;
-import model.game.hexs.Terrain;
-import model.model.RuleCombo;
+import main.java.model.game.hexs.Animal;
+import main.java.model.game.hexs.HexTag;
+import main.java.model.game.hexs.StructureColor;
+import main.java.model.game.hexs.Terrain;
+import main.java.model.model.RuleCombo;
 
 import java.awt.*;
 import java.io.*;

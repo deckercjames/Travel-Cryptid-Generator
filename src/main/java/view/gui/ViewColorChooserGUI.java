@@ -1,9 +1,9 @@
-package view.gui;
+package main.java.view.gui;
 
-import fileio.Settings;
-import model.game.hexs.*;
-import view.boardview.ViewBoard;
-import view.boardview.ViewBoardImageVectors;
+import main.java.fileio.Settings;
+import main.java.model.game.hexs.*;
+import main.java.view.boardview.ViewBoard;
+import main.java.view.boardview.ViewBoardImageVectors;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

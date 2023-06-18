@@ -1,6 +1,6 @@
-package model.game.board;
+package main.java.model.game.board;
 
-import model.game.hexs.*;
+import main.java.model.game.hexs.*;
 
 import java.util.*;
 

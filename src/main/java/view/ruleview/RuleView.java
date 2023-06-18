@@ -1,4 +1,4 @@
-package view.ruleview;
+package main.java.view.ruleview;
 
 import java.io.IOException;
 import java.util.List;

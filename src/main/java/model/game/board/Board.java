@@ -1,11 +1,11 @@
-package model.game.board;
+package main.java.model.game.board;
 
 
-import model.game.hexs.StructureColor;
-import model.game.hexs.StructureType;
-import model.model.Rule;
-import model.game.hexs.Hex;
-import model.game.hexs.HexLocation;
+import main.java.model.game.hexs.StructureColor;
+import main.java.model.game.hexs.StructureType;
+import main.java.model.model.Rule;
+import main.java.model.game.hexs.Hex;
+import main.java.model.game.hexs.HexLocation;
 
 import java.util.*;
 

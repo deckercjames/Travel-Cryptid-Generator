@@ -1,4 +1,4 @@
-package analysis.superclasses;
+package main.java.analysis.superclasses;
 
 import java.util.ArrayList;
 import java.util.List;

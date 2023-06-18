@@ -1,8 +1,8 @@
-package analysis.experiments;
+package main.java.analysis.experiments;
 
-import analysis.superclasses.AnalyserMultiPlayer;
-import model.game.board.Board;
-import model.model.RuleCombo;
+import main.java.analysis.superclasses.AnalyserMultiPlayer;
+import main.java.model.game.board.Board;
+import main.java.model.model.RuleCombo;
 
 import java.util.List;
 

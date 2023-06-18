@@ -1,8 +1,8 @@
-package analysis.experiments;
+package main.java.analysis.experiments;
 
-import analysis.superclasses.Analyser;
-import model.game.board.Board;
-import model.model.RuleManager;
+import main.java.analysis.superclasses.Analyser;
+import main.java.model.game.board.Board;
+import main.java.model.model.RuleManager;
 
 public class RuleCoverage extends Analyser {
 

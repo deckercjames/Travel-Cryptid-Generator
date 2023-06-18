@@ -1,4 +1,4 @@
-package model.game.hexs;
+package main.java.model.game.hexs;
 
 import java.util.Set;
 

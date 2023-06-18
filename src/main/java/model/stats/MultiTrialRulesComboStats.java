@@ -1,4 +1,4 @@
-package model.stats;
+package main.java.model.stats;
 
 public class MultiTrialRulesComboStats {
 

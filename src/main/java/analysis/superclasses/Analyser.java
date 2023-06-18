@@ -1,6 +1,6 @@
-package analysis.superclasses;
+package main.java.analysis.superclasses;
 
-import model.model.Model;
+import main.java.model.model.Model;
 
 import java.io.File;
 import java.io.FileWriter;

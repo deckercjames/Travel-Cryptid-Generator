@@ -1,4 +1,4 @@
-package view.ruleview;
+package main.java.view.ruleview;
 
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;

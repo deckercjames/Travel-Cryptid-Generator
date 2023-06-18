@@ -1,10 +1,10 @@
-package main;
+package main.java.main;
 
-import analysis.superclasses.Analyser;
-import analysis.experiments.RuleCoverage;
-import analysis.experiments.SolutionSizeFrequency;
-import analysis.experiments.SpecificRuleCoverage;
-import controller.Controller;
+import main.java.analysis.superclasses.Analyser;
+import main.java.analysis.experiments.RuleCoverage;
+import main.java.analysis.experiments.SolutionSizeFrequency;
+import main.java.analysis.experiments.SpecificRuleCoverage;
+import main.java.controller.Controller;
 
 public class Cryptid{
 

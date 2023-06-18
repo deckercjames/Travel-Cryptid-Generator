@@ -1,9 +1,9 @@
-package model.model;
+package main.java.model.model;
 
-import model.game.hexs.Animal;
-import model.game.hexs.StructureColor;
-import model.game.hexs.StructureType;
-import model.game.hexs.Terrain;
+import main.java.model.game.hexs.Animal;
+import main.java.model.game.hexs.StructureColor;
+import main.java.model.game.hexs.StructureType;
+import main.java.model.game.hexs.Terrain;
 
 import java.util.ArrayList;
 import java.util.List;

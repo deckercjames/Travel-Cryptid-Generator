@@ -1,6 +1,6 @@
-package view.gui;
+package main.java.view.gui;
 
-import controller.ControlThread;
+import main.java.controller.ControlThread;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
