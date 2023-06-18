@@ -3,6 +3,7 @@ package main.java.analysis.experiments;
 import main.java.analysis.superclasses.AnalyserHistogram;
 import main.java.model.game.board.Board;
 import main.java.model.model.RuleManager;
+import main.java.model.model.Rule;
 
 import java.util.Arrays;
 
@@ -23,8 +24,10 @@ public class SpecificRuleCoverage extends AnalyserHistogram {
     private int binCount;
 
     @Override
-    protected double computeDatum() {
-        return (double) RuleManager.getNormalRules()[ruleIndex].getPossibleLocations().size() / Board.SIZE;
+    protected double computeDatum()
+    {
+        Rule rule = RuleManager.getNormalRules()[ruleIndex];
+        return (double) model.getPossibleLocations(rule).size() / Board.SIZE;
     }
 
     @Override

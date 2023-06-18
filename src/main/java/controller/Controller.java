@@ -1,14 +1,11 @@
 package main.java.controller;
 
-import main.java.model.game.hexs.HexLocation;
 import main.java.model.model.Model;
 import main.java.model.model.Rule;
-import main.java.model.model.RuleCombo;
 import main.java.view.boardview.ViewBoard;
 import main.java.view.boardview.ViewBoardImageVectors;
-import main.java.view.gui.ViewGUI;
-import main.java.view.ruleview.RuleView;
-import main.java.view.ruleview.RuleViewPDF;
+import main.java.view.ruleview.RuleBookletView;
+import main.java.view.ruleview.RuleBookletViewPDF;
 
 import javax.swing.*;
 import java.io.File;
@@ -16,73 +13,12 @@ import java.util.*;
 
 public class Controller{
 
-    public Controller(){
+    public Controller()
+    {
         model = new Model();
     }
 
     private Model model;
-    private Map<Integer, RuleCombo> completeRuleCombos;
-
-    public void makeGUI(){
-        new ViewGUI();
-    }
-
-    public void printPossibleSolutionsBoard(int numPlayers, boolean hardMode){
-
-        model.initializeRandomBoard();
-
-        new ViewBoardImageVectors();
-
-        //get the valid solutions from the rules combos
-        Set<HexLocation> validSolutions = new HashSet<>(300);
-        Set<HexLocation> validFairSolutions = new HashSet<>(300);
-        int validComboCount = 0;
-        int validFairComboCount = 0;
-
-        List<RuleCombo> allCombos = model.getAllRuleCombos(numPlayers, hardMode);
-
-        for(RuleCombo combo : allCombos){
-
-            HexLocation validSolution = combo.getValidSolution();
-
-            if(validSolution != null) {
-
-                validSolutions.add(validSolution);
-                validComboCount++;
-                if(combo.isFair()){
-                    validFairSolutions.add(validSolution);
-                    validFairComboCount++;
-                }
-            }
-        }
-
-        System.out.println("Found "+validComboCount+" valid combos covering "+validSolutions.size()+" hexes");
-        System.out.println("Found "+validFairComboCount+" valid fair combos covering "+validFairSolutions.size()+" hexes");
-
-
-//        viewBoard.outputBoard(model.getBoard(), 1000, "output/validSolutions_"+numPlayers+"_players", "Board", "Pemi");
-//        viewBoard.outputBoard(model.getBoard(), 1000, "output/validFairSolutions_"+numPlayers+"_players", "Board", "Pemi");
-
-    }
-
-    public void testBoardImage(String outputFolder){
-        new ViewBoardImageVectors();
-
-        model.initializeRandomBoard();
-
-        //output game boards
-//        boardViewBoard.outputBoard(model.getBoard(), 1000, outputFolder+"BoardTest", "Board", "Pemi");
-
-    }
-
-
-    private void makeCompleteGame(boolean hardMode){
-
-        model.initializeRandomBoard();
-
-        completeRuleCombos = model.getCompleteRandomRuleCombos(hardMode);
-
-    }
 
     /**
      * makes games and saves them to the output folder
@@ -94,80 +30,91 @@ public class Controller{
      * @param progressMonitor
      */
     public void makeCompleteGames(File outputFolder, String gameSetName, int numGames, int numEasyGames,
-                                  int boardImageSize, ProgressMonitor progressMonitor){
-
-        if(progressMonitor != null){
+                                  int boardImageSize, ProgressMonitor progressMonitor)
+    {
+        if(progressMonitor != null)
+        {
             progressMonitor.setNote("Making Cryptid ");
             progressMonitor.setProgress(1);
         }
 
         ViewBoard boardViewBoard = new ViewBoardImageVectors();
-        RuleView ruleView = new RuleViewPDF(outputFolder);
+        RuleBookletView ruleView = new RuleBookletViewPDF(outputFolder);
 
-        //player index -> number of players -> game number
-        List<Map<Integer, List<String>>> ruleTable = new ArrayList<>(5);
+        // player index -> number of players -> game number
+        List<Map<Integer, List<Rule>>> ruleTable = new ArrayList<>(5);
 
         //add all player maps
-        for(int i = 0; i < 5; i++){
+        for(int i = 0; i < 5; i++)
+        {
             ruleTable.add(new TreeMap<>());
-            for(int j = (i<3)?3:(i+1); j <= 5; j++){
+            for(int j = (i<3)?3:(i+1); j <= 5; j++)
+            {
                 ruleTable.get(i).put(j, new ArrayList<>(numGames));
             }
         }
 
         //make i games
-        for(int i = 0; i < numGames; i++){
-
-            if(progressMonitor != null){
+        for(int i = 0; i < numGames; i++)
+        {
+            if(progressMonitor != null)
+            {
                 progressMonitor.setNote("Making Game "+(i+1));
                 progressMonitor.setProgress(i+2);
             }
 
             System.out.println("Making Game "+i);
 
-            //after making all easy games, make hard games
+            // after making all easy games, make hard games
             boolean hardMode = i >= numEasyGames;
-            makeCompleteGame(hardMode);
+            
+            // Intilize the board
+            model.initializeRandomBoard();
 
-            //output game board
+            // Output game board to a file
             boardViewBoard.outputBoard(model.getBoard(), boardImageSize, outputFolder, i, gameSetName, hardMode);
 
             //make rules set for each number of players
-            for(int k = 3; k <= 5; k++){
-
-                System.out.println("For "+k+" players");
-
+            for(int numPlayers = 3; numPlayers <= 5; numPlayers++)
+            {
+                System.out.println("For "+numPlayers+" players");
+                
                 //get the rule combo for a game with k players
-                List<Rule> combo = completeRuleCombos.get(k).getRulesInRandomOrder();
+                Rule[] rules = model.getRandomValidFairRuleCombo(hardMode, numPlayers).getRulesInRandomOrder();
 
-                for(Rule rule : combo)
+                for(Rule rule : rules)
                     System.out.println(rule);
 
                 //add the rule to the table
                 //player j, game i, k players
-                for(int j = 0; j < k; j++){
-                    ruleTable.get(j).get(k).add(combo.get(j).toString());
+                for(int j = 0; j < numPlayers; j++)
+                {
+                    ruleTable.get(j).get(numPlayers).add(rules[j]);
                 }
 
-                System.out.println();
-                System.out.println();
-
+                System.out.println("\n");
             }
-
         }
 
-        if(progressMonitor != null){
+        if(progressMonitor != null)
+        {
             progressMonitor.setNote("Making Rules");
             progressMonitor.setProgress(numGames+2);
         }
 
-        //output all the rules
-        try {
+        //output all the rules to a pdf
+        try
+        {
             ruleView.outputRules(gameSetName, numEasyGames, ruleTable);
-        }catch (Exception e){
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
-        if(progressMonitor != null) {
+        
+        // Close the Progress monitor
+        if(progressMonitor != null)
+        {
             progressMonitor.close();
         }
 

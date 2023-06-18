@@ -3,8 +3,7 @@ package main.java.analysis.experiments;
 import main.java.analysis.superclasses.AnalyserMultiPlayer;
 import main.java.model.game.board.Board;
 import main.java.model.model.RuleCombo;
-
-import java.util.List;
+import main.java.model.model.RuleManager;
 
 public class SolutionSizeFrequency extends AnalyserMultiPlayer {
 
@@ -15,7 +14,7 @@ public class SolutionSizeFrequency extends AnalyserMultiPlayer {
     @Override
     protected double[] computeData(int numPlayers) {
 
-        List<RuleCombo> allCombos = model.getAllRuleCombos(numPlayers, true);
+        RuleCombo[] allCombos = RuleManager.getAllRuleCombos(numPlayers, true);
 
         //make a list to store the frequencies
         double[] solutionCountFrequencies = new double[Board.SIZE+1];
@@ -24,7 +23,7 @@ public class SolutionSizeFrequency extends AnalyserMultiPlayer {
         for(RuleCombo combo : allCombos){
 
             //increment the frequency of combos with that number os solutions
-            solutionCountFrequencies[combo.getSolutions().size()]++;
+            solutionCountFrequencies[model.getSolutions(combo).size()]++;
 
         }
         return solutionCountFrequencies;

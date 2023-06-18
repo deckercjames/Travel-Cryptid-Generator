@@ -1,19 +1,19 @@
 package main.java.main;
 
 import main.java.analysis.superclasses.Analyser;
+import main.java.gui.CryptidGUI;
 import main.java.analysis.experiments.RuleCoverage;
 import main.java.analysis.experiments.SolutionSizeFrequency;
 import main.java.analysis.experiments.SpecificRuleCoverage;
-import main.java.controller.Controller;
 
-public class Cryptid{
-
-    public static void main(String[] args){
-
+public class Cryptid
+{
+    public static void main(String[] args)
+    {
         //if there are no arguments, create a gui application
-        if(args.length == 0) {
-            Controller c = new Controller();
-            c.makeGUI();
+        if (args.length == 0)
+        {
+            new CryptidGUI();
             return;
         }
 
@@ -21,7 +21,8 @@ public class Cryptid{
 
         //if there are arguments, run analysis
         //numTrials, trial_type, additional args
-        switch (args[1]) {
+        switch (args[1])
+        {
             case "SolutionCountFrequency":
                 analyser = new SolutionSizeFrequency();
                 break;
@@ -33,7 +34,8 @@ public class Cryptid{
                 break;
         }
 
-        if(analyser != null) {
+        if (analyser != null)
+        {
             final long startTime = System.currentTimeMillis();
             analyser.runAnalyser(Integer.parseInt(args[0]));
             final long duration = System.currentTimeMillis() - startTime;

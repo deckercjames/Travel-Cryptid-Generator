@@ -1,4 +1,4 @@
-package main.java.view.gui;
+package main.java.gui;
 
 import main.java.controller.ControlThread;
 
@@ -11,9 +11,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Paths;
 
-public class ViewGUI extends JFrame implements ActionListener, ChangeListener {
-
-    public ViewGUI(){
+public class CryptidGUI extends JFrame implements ActionListener, ChangeListener
+{
+    public CryptidGUI()
+    {
         super("Cryptid Generator");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         init();
@@ -27,8 +28,8 @@ public class ViewGUI extends JFrame implements ActionListener, ChangeListener {
     private JSlider easyCountSlider;
     private JTextField gameNameField;
 
-    private void init(){
-
+    private void init()
+    {
         this.setLayout(new BorderLayout());
 
         JPanel savePanel = new JPanel();
@@ -84,7 +85,6 @@ public class ViewGUI extends JFrame implements ActionListener, ChangeListener {
         generatePanel.add(makeBoardsButton, BorderLayout.EAST);
         this.add(generatePanel, BorderLayout.SOUTH);
 
-//        this.add(panel, BorderLayout.WEST);
         this.pack();
         this.setMinimumSize(this.getSize());
         this.setLocationRelativeTo(null);
@@ -93,8 +93,8 @@ public class ViewGUI extends JFrame implements ActionListener, ChangeListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-
+    public void actionPerformed(ActionEvent e)
+    {
         if(e.getSource() == makeBoardsButton){
 
             if(gameNameField.getText().equals("")){
@@ -109,7 +109,7 @@ public class ViewGUI extends JFrame implements ActionListener, ChangeListener {
 
             File outputFolder = new File(Paths.get(saveLocationField.getText(), gameNameField.getText()).toString());
 
-            if(outputFolder.exists()){
+            if (outputFolder.exists()){
                 String[] options = {"Cancel", "Overwrite"};
                 int result = JOptionPane.showOptionDialog(
                         this,
@@ -146,11 +146,6 @@ public class ViewGUI extends JFrame implements ActionListener, ChangeListener {
                     numBoards, easyCountSlider.getValue(), 6000, progressMonitor);
             Thread thread = new Thread(ct);
             thread.start();
-
-            //no status bar
-//            Controller controller = new Controller();
-//            controller.makeCompleteGames(outputFolder, gameNameField.getText(), numBoards, 6000, null);
-
         }
 
 
@@ -177,7 +172,7 @@ public class ViewGUI extends JFrame implements ActionListener, ChangeListener {
 
         else if(e.getSource() == imHenkButton){
 
-            new ViewColorChooserGUI(this);
+            new ColorChooserGUI(this);
             this.setVisible(false);
 
         }

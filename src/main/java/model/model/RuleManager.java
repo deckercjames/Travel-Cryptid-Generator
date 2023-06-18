@@ -8,23 +8,10 @@ import main.java.model.game.hexs.Terrain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashMap;
 
-public class RuleManager {
-
-    RuleManager(){
-
-        allRuleCombosByModeAndPlayerNumber = new TreeMap<>();
-        allRuleCombosByModeAndPlayerNumber.put(true, new TreeMap<>());
-        allRuleCombosByModeAndPlayerNumber.put(false, new TreeMap<>());
-        //generate combos on startup
-//        for(int i = 3; i <= 5; i++){
-//            makeAllCombos(i, true);
-//            makeAllCombos(i, false);
-//        }
-
-    }
-
+public class RuleManager
+{
     private static Rule[] normalRules = {
             //one of two types of terrain
             new Rule(0, Terrain.FOREST, Terrain.DESERT),
@@ -60,65 +47,72 @@ public class RuleManager {
     };
 
     private static Rule[] allRules;
-    static {
-        //create the negative rules and add all the rules to 'all rules'
-        allRules = new Rule[normalRules.length * 2];
-        for(int i = 0; i < normalRules.length; i++){
-            allRules[i] = normalRules[i];
-            allRules[i + normalRules.length] = normalRules[i].getNegative();
-        }
-    }
-
-
-
-    private Map<Boolean, Map<Integer, List<RuleCombo>>> allRuleCombosByModeAndPlayerNumber;
+    
+    // The possible rule combos will always be the same
+    // [numPlayers(3-5)][hardMode/easyMode] -> array of all possible rule combos
+    private static Map<Integer, Map<Boolean, RuleCombo[]>> allRuleCombosByPlayerNumberAndMode;
     //true = hard mode, false = easy mode
 
 
-    public static Rule[] getNormalRules() {
+    static {
+        //create the negative rules and add all the rules to 'allRules'
+        allRules = new Rule[normalRules.length * 2];
+        for(int i = 0; i < normalRules.length; i++)
+        {
+            allRules[i] = normalRules[i];
+            allRules[i + normalRules.length] = normalRules[i].getNegative();
+        }
+        
+        allRuleCombosByPlayerNumberAndMode = new HashMap<>();
+        
+        // Create a cache of all possible rule combos
+        for (int numPlayers = 3; numPlayers <= 5; numPlayers++)
+        {
+            Map<Boolean, RuleCombo[]> modeToRuleCombos = new HashMap<>();
+            modeToRuleCombos.put(true, getAllCombos(numPlayers, true));
+            modeToRuleCombos.put(false, getAllCombos(numPlayers, false));
+            allRuleCombosByPlayerNumberAndMode.put(numPlayers, modeToRuleCombos);
+        }
+
+    }
+
+
+    public static Rule[] getNormalRules()
+    {
         return normalRules;
     }
 
-    static Rule[] getAllRules(){
+    public static Rule[] getAllRules()
+    {
         return allRules;
     }
 
 
 
-    List<RuleCombo> getAllRuleCombos(int numPlayers, boolean hardMode){
-        //see if the list of rule combos has bee created
-        List<RuleCombo> combos = allRuleCombosByModeAndPlayerNumber.get(hardMode).get(numPlayers);
-
-        //if it has, return it
-        if(combos != null)
-            return combos;
-
-        //if it is not created, make it and add it to the map
-        makeAllCombos(numPlayers, hardMode);
-
-        return allRuleCombosByModeAndPlayerNumber.get(hardMode).get(numPlayers);
+    public static RuleCombo[] getAllRuleCombos(int numPlayers, boolean hardMode)
+    {
+        return allRuleCombosByPlayerNumberAndMode.get(numPlayers).get(hardMode);
     }
 
 
 
-
-
-    //recursively make all rule combos
-    private void makeAllCombos(Rule[] usingRules,
+    // recursively make all rule combos
+    private static void makeAllCombos(Rule[] usingRules,
                                int numPlayers,
                                int newRuleStartIndex,
                                RuleCombo combo,
-                               List<RuleCombo> allCombos){
-
-        //base case, if the combo is full, add it
-        if(combo.size() == numPlayers) {
+                               List<RuleCombo> allCombos)
+    {
+        // base case, if the combo is full, add it
+        if(combo.size() == numPlayers)
+        {
             allCombos.add(combo);
             return;
         }
 
-        //add a new rule to the set
-        for(int i = newRuleStartIndex; i < usingRules.length; i++){
-
+        // add a new rule to the set
+        for(int i = newRuleStartIndex; i < usingRules.length; i++)
+        {
             //duplicate the combo
             RuleCombo combo2 = new RuleCombo(combo);
 
@@ -127,39 +121,34 @@ public class RuleManager {
 
             //recurse
             makeAllCombos(usingRules, numPlayers, i+1, combo2, allCombos);
-
         }
-
     }
 
 
-    private void makeAllCombos(int numPlayers, boolean hardMode){
-
-        System.out.print("Making rule combos: "+numPlayers+" players "+(hardMode?"hard":"easy")+"...");
-
+    private static RuleCombo[] getAllCombos(int numPlayers, boolean hardMode)
+    {
         //create a list for all the rule combos
         List<RuleCombo> allCombos = new ArrayList<>(getTotalComboCount(numPlayers));
 
         //set which set of rules are bing used
-        Rule[] usingRules = normalRules;
-        if(hardMode) usingRules = allRules;
+        Rule[] usingRules = (hardMode) ? allRules : normalRules;
 
         //start recursion
         makeAllCombos(usingRules, numPlayers, 0, new RuleCombo(), allCombos);
 
-        //debug
-        System.out.printf("Completed: %,d combos\n", allCombos.size());
-
-        this.allRuleCombosByModeAndPlayerNumber.get(hardMode).put(numPlayers, allCombos);
+        return allCombos.toArray(new RuleCombo[allCombos.size()]);
     }
 
 
-    private static int getTotalComboCount(int n){
+    private static int getTotalComboCount(int n)
+    {
         int comboCount = 1;
-        for(int i = 48; i > 48-n; i--){
+        for(int i = 48; i > 48-n; i--)
+        {
             comboCount *= i;
         }
-        for(int i = 1; i <= n; i++){
+        for(int i = 1; i <= n; i++)
+        {
             comboCount /= i;
         }
         return comboCount;

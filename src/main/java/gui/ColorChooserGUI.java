@@ -1,4 +1,4 @@
-package main.java.view.gui;
+package main.java.gui;
 
 import main.java.fileio.Settings;
 import main.java.model.game.hexs.*;
@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-class ViewColorChooserGUI extends JFrame implements ActionListener, ChangeListener {
+class ColorChooserGUI extends JFrame implements ActionListener, ChangeListener {
 
-    ViewColorChooserGUI(ViewGUI viewGUI){
+    ColorChooserGUI(CryptidGUI viewGUI){
         super("Cryptid Color Selector");
 
         this.viewGUI = viewGUI;
@@ -37,7 +37,7 @@ class ViewColorChooserGUI extends JFrame implements ActionListener, ChangeListen
         init();
     }
 
-    private ViewGUI viewGUI;
+    private CryptidGUI viewGUI;
 
     private Map<HexLocation, Hex> testBoard;
 

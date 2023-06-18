@@ -1,5 +1,7 @@
 package main.java.view.ruleview;
 
+import main.java.model.model.Rule;
+
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.HorizontalAlignment;
@@ -19,9 +21,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class RuleViewPDF extends RuleView {
+public class RuleBookletViewPDF extends RuleBookletView {
 
-    public RuleViewPDF(File outputFile){
+    public RuleBookletViewPDF(File outputFile){
         this.dest = outputFile;
     }
 
@@ -79,8 +81,8 @@ public class RuleViewPDF extends RuleView {
 
     }
 
-    private void makeNumPlayersRow(BaseTable table, int numPlayers, List<String> rulesByGame){
-
+    private void makeNumPlayersRow(BaseTable table, int numPlayers, List<Rule> rulesByGame)
+    {
         Row<PDPage> row = table.createRow(20);
 
         Cell<PDPage> labelCell = row.createCell(LEFT_COLUMN_WIDTH, numPlayers+" players:");
@@ -89,8 +91,9 @@ public class RuleViewPDF extends RuleView {
 
         float ruleCellWidth = (100.0f - LEFT_COLUMN_WIDTH) / rulesByGame.size();
 
-        for (String s : rulesByGame) {
-            Cell<PDPage> cell = row.createCell(ruleCellWidth, s);
+        for (Rule rule : rulesByGame)
+        {
+            Cell<PDPage> cell = row.createCell(ruleCellWidth, RuleView.getRuleAsString(rule));
             cell.setFont(fontPlain);
             cell.setFontSize(9);
         }
@@ -98,8 +101,8 @@ public class RuleViewPDF extends RuleView {
     }
 
     @Override
-    public void outputRules(String gameSetName, int numEasyGames, List<Map<Integer, List<String>>> ruleTables) throws IOException {
-
+    public void outputRules(String gameSetName, int numEasyGames, List<Map<Integer, List<Rule>>> ruleTables) throws IOException
+    {
         //truncate game set name so it fits in one line (yeah its a work around)
         BufferedImage bi = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = bi.createGraphics();
@@ -108,7 +111,8 @@ public class RuleViewPDF extends RuleView {
         String gameSetNameMod = gameSetName;//modified title (uppercase, truncated with ellipses)
         int gameSetNameWidth = g.getFontMetrics().stringWidth(gameSetNameMod);
         System.out.println("name width: "+gameSetNameWidth);
-        while(gameSetNameWidth > 375){
+        while(gameSetNameWidth > 375)
+        {
             lettersIncluded--;
             gameSetNameMod = gameSetName.substring(0, lettersIncluded).toUpperCase() + "...";
             System.out.println("name width: "+gameSetNameWidth);
@@ -127,14 +131,11 @@ public class RuleViewPDF extends RuleView {
         PDPageContentStream contentStream = new PDPageContentStream(document, page);
         contentStream.beginText();
 
-
-
         //Dummy Table
         float margin = 50;
 
         // starting y position is whole page height subtracted by top and bottom margin
         float yStartNewPage = page.getMediaBox().getHeight() - (margin);
-//        float yStartNewPage = 700;
 
         // we want table across whole page width (subtracted by left and right margin of course)
         float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
@@ -146,8 +147,8 @@ public class RuleViewPDF extends RuleView {
                 bottomMargin, tableWidth, margin, document, page, true, true);
 
         //create each players rules
-        for(int i = 0; i < ruleTables.size(); i++){
-
+        for(int i = 0; i < ruleTables.size(); i++)
+        {
             System.out.println("Table for player "+i);
 
             makeTitleRow(table, i, gameSetName);
@@ -155,20 +156,16 @@ public class RuleViewPDF extends RuleView {
             makeHeaderRow(table, ruleTables.get(0).get(5).size(), numEasyGames);
 
             //create the rule rows for each number of games
-            for(Map.Entry<Integer, List<String>> rulesByGame : ruleTables.get(i).entrySet()) {
+            for(Map.Entry<Integer, List<Rule>> rulesByGame : ruleTables.get(i).entrySet())
+            {
                 makeNumPlayersRow(table, rulesByGame.getKey(), rulesByGame.getValue());
             }
-
         }
-
 
         table.draw();
 
-
-
         //Setting the font to the Content stream
         contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
-
 
         contentStream.endText();
         contentStream.close();
@@ -185,8 +182,6 @@ public class RuleViewPDF extends RuleView {
 
         System.out.println("PDF created");
         System.out.println(dest);
-
     }
-
 
 }

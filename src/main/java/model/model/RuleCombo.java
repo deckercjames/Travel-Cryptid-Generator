@@ -1,13 +1,11 @@
 package main.java.model.model;
 
-import main.java.model.game.hexs.HexLocation;
-
 import java.util.*;
 
-public class RuleCombo extends HashSet<Rule> {
-
-
-    RuleCombo(RuleCombo combo) {
+public class RuleCombo extends HashSet<Rule>
+{
+    RuleCombo(RuleCombo combo)
+    {
         super(combo);
     }
 
@@ -15,93 +13,45 @@ public class RuleCombo extends HashSet<Rule> {
 
     }
 
-    public Set<HexLocation> getSolutions(){
-
-        //find the intersection of all possible location for each rule in the combo
-        Iterator<Rule> ruleIterator = iterator();
-
-        //initial set from first rule
-        Set<HexLocation> solutions = new HashSet<>(ruleIterator.next().getPossibleLocations());
-
-        //retain sets possible locations from all other turles
-        while(ruleIterator.hasNext()){
-            solutions.retainAll(ruleIterator.next().getPossibleLocations());
-        }
-
-        return solutions;
-    }
-
     /**
-     * If this rule combo produces a valid solution (only one location),
-     * then that location is returned. Otherwise null is returned. Null
-     * is returned when there are either no solutions or more than one.
+     * Gets all strict subsets of this rules set. All sets, not including this set itself
+     * 
      * @return
      */
-    public HexLocation getValidSolution(){
-        Set<HexLocation> solutions = getSolutions();
-        if(solutions.size() == 1)
-            return solutions.iterator().next();
-        return null;
-    }
-
-
-    private List<RuleCombo> getAllSubsetsWithTwoOrMoreElements(){
+    public RuleCombo[] getAllStrictSubsets()
+    {
+        // Convert this set of rules into an array that can be indexed
         Rule[] rules = toArray(new Rule[size()]);
 
         List<RuleCombo> subsets = new ArrayList<>();
 
-        for(int i = 0; i < (1<<rules.length); i++){
+        for(int ruleMask = 0; ruleMask < (1<<rules.length); ruleMask++)
+        {
+            // Make a subset with this mask
             RuleCombo subset = new RuleCombo();
-            for(int j = 0; j < rules.length; j++){
-                if((i & (1 << j)) > 0){
-                    subset.add(rules[j]);
-                }
+            for(int i = 0; i < rules.length; i++)
+            {
+                if((ruleMask & (1 << i)) == 0) continue;
+
+                subset.add(rules[i]);
             }
-            if(subset.size() >= 2 && subset.size() < size()){
-                subsets.add(subset);
-            }
+            
+            // If this is not a strict subset
+            if(subset.size() == size()) continue;
+            
+            // add this subset to the list
+            subsets.add(subset);
         }
 
-        return subsets;
-
+        return subsets.toArray(new RuleCombo[subsets.size()]);
     }
 
-
-    /**
-     * Returns true if all possible subsets give multiple solutions.
-     * false otherwise. If any subset produces one solutions then
-     * the set is not fair.
-     * @return
-     */
-    public boolean isFair(){
-
-        List<RuleCombo> subsets = getAllSubsetsWithTwoOrMoreElements();
-
-        //check all subsets
-        for(RuleCombo combo : subsets){
-            if(combo.getSolutions().size() <= 1){
-//                System.out.print(this);
-//                System.out.println(getValidSolution());
-//                System.out.println("Unfair; valid subset:");
-//                System.out.println(combo);
-//                System.out.println();
-                return false;
-            }
-        }
-
-        return true;
-
-    }
-
-
-    public List<Rule> getRulesInRandomOrder(){
-        List<Rule> set = new ArrayList<>(this);
-        List<Rule> random = new ArrayList<>(set.size());
-        Random rd = new Random();
-        while(!set.isEmpty()){
-            random.add(set.remove(rd.nextInt(set.size())));
-        }
-        return random;
+    
+    public Rule[] getRulesInRandomOrder()
+    {
+        List<Rule> rules_in_random_order = new ArrayList<>(this);
+        Collections.shuffle(rules_in_random_order);
+        return rules_in_random_order.toArray(new Rule[rules_in_random_order.size()]);
     }
 
 

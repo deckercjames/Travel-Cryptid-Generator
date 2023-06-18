@@ -3,32 +3,27 @@ package main.java.model.model;
 import main.java.model.game.hexs.*;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Rule implements Serializable {
 
-    Rule(int range, HexTag... tags){
-
+    Rule(int range, HexTag... tags)
+    {
         this.range = range;
         this.normal = true;
         this.tags = new HashSet<>(Arrays.asList(tags));
-
-        possible = new HashSet<>(200);
-
     }
 
     //negation constructor
-    private Rule(int range, boolean normal, Set<HexTag> tags){
-
+    private Rule(int range, boolean normal, Set<HexTag> tags)
+    {
         this.range = range;
         this.normal = normal;
         this.tags = new HashSet<>(tags);
-
-        possible = new HashSet<>(200);
-
     }
 
     //rule definition
@@ -41,68 +36,28 @@ public class Rule implements Serializable {
     public Set<HexTag> getTypes(){ return tags; }
 
 
-    void clearHexes(){
-        this.possible.clear();
-    }
-
-    //categorize all sets
-    private Set<HexLocation> possible;
-
-    public Set<HexLocation> getPossibleLocations(){ return possible; }
-
-    public void addPossibleLocation(HexLocation possibility){
-        possible.add(possibility);
-    }
-
-    Rule getNegative(){
+    Rule getNegative()
+    {
         return new Rule(range, false, tags);
     }
 
     @Override
-    public String toString(){
-
-        HexTag firstTag = tags.iterator().next();
-
-        StringBuilder str = new StringBuilder();
-        if(range == 0){
-            if(normal) str.append("On ");
-            else str.append("Not on ");
-            Iterator<HexTag> itr = tags.iterator();
-            str.append(HexTag.capitalized(itr.next()));
-            str.append(" or ");
-            str.append(HexTag.capitalized(itr.next()));
-            return str.toString();
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Rule(");
+        sb.append(normal ? "Normal" : "Not");
+        sb.append(", ");
+        sb.append(range);
+        sb.append(", {");
+        List<String> tags_as_strings = new ArrayList<>();
+        for (HexTag tag : tags)
+        {
+            tags_as_strings.add(tag.toString());
         }
-
-        if(normal) str.append("Within ");
-        else str.append("Not within ");
-        str.append(range);
-        str.append(" of ");
-
-        if(range == 1 && tags.size()==2){
-            str.append("Animal Territory");
-        }
-
-        else if(range == 2){
-            if(firstTag == StructureType.ABANDONED_SHACK)
-                str.append("Abandoned Shack");
-            else if(firstTag == StructureType.STANDING_STONE)
-                str.append("Standing Stone");
-            else {
-                str.append(firstTag);
-            }
-        }
-
-        else if(range == 3){
-            str.append("a ");
-            str.append(firstTag);
-        }
-
-        else{
-            str.append(firstTag);
-        }
-
-        return str.toString();
+        sb.append(String.join(", ", tags_as_strings));
+        sb.append("})");
+        return sb.toString();
     }
 
     @Override
