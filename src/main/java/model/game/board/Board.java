@@ -3,7 +3,7 @@ package main.java.model.game.board;
 
 import main.java.model.game.hexs.StructureColor;
 import main.java.model.game.hexs.StructureType;
-import main.java.model.model.Rule;
+import main.java.model.model.Clue;
 import main.java.model.game.hexs.Hex;
 import main.java.model.game.hexs.HexLocation;
 
@@ -14,36 +14,49 @@ public abstract class Board
 
     Map<HexLocation, Hex> board;
 
+    /**
+     * This is a cache of which Hex locations are on the edge
+     */
     private Map<HexLocation, Boolean> knownEdgeTiles;
 
-    public final static int SIZE = 108;
-
+    /**
+     * Returns an iterator over all hexLocation/Hex entries in the board
+     * @return
+     */
     public Iterator<Map.Entry<HexLocation, Hex>> getBoardIterator(){ return board.entrySet().iterator(); }
 
+    /**
+     * Randomizes the terrain hexes on the board
+     */
     public abstract void randomizeHexes();
 
+    /**
+     * Does a simple random function of adding all 8 structures to the board, such that
+     * no two structures share a hex
+     */
     public void randomizeStructures()
     {
-        Set<Integer> usedIndexes = new TreeSet<>();
         Random rd = new Random();
+        
+        // convert the hex locations on the board to a list where random indexes can be selected
+        List<HexLocation> boardLocations = new ArrayList<>(board.keySet());
 
         for(StructureType structureType : StructureType.values())
         {
             for(StructureColor structureColor : StructureColor.values())
             {
-                //get an unused index
-                int index;
-                do {
-                    index = rd.nextInt(board.size() - usedIndexes.size());
-                } while (usedIndexes.contains(index));
-                usedIndexes.add(index);
-
-                //iterate to that index and add the structure
-                Iterator<Map.Entry<HexLocation, Hex>> itr = board.entrySet().iterator();
-                for (int i = 0; i < index - 1; i++) {
-                    itr.next();
+                while (true)
+                {
+                    int index = rd.nextInt(boardLocations.size());
+                    
+                    // if this board location already has a structure, do not add another one
+                    if (board.get(boardLocations.get(index)).hasStructure())
+                    {
+                        continue;
+                    }
+                    
+                    board.get(boardLocations.get(index)).addStructure(structureType, structureColor);
                 }
-                itr.next().getValue().addStructure(structureType, structureColor);
             }
         }
     }
@@ -53,16 +66,16 @@ public abstract class Board
         return board.keySet();
     }
 
-    public Set<HexLocation> getHexesMatchingRule(Rule rule)
+    public Set<HexLocation> getHexesMatchingClue(Clue clue)
     {
-        // Possible locations assuming the rule in normal (the locations will be negated at the end of the functions for a hard rule)
+        // Possible locations assuming the clue in normal (the locations will be negated at the end of the functions for a hard clue)
         Set<HexLocation> possibleLocations = new HashSet<>();
         
-        //check every hex to see if it is possible for the given rule
+        //check every hex to see if it is possible for the given clue
         for(HexLocation testHex : board.keySet())
         {
             //get the surroundings of the hex
-            Set<HexLocation> offsets = HexLocation.getSurrounding(rule.getRange());
+            Set<HexLocation> offsets = HexLocation.getSurrounding(clue.getRange());
             
             //check all surroundings
             for(HexLocation offset : offsets)
@@ -73,17 +86,17 @@ public abstract class Board
                 //ignore if it is off the board
                 if(neighbor == null) continue;
 
-                //if true: this neighbor makes 'testHex' a valid option for 'rule'
-                if(!neighbor.containsAnyOf(rule.getTypes())) continue;
+                //if true: this neighbor makes 'testHex' a valid option for 'clue'
+                if(!neighbor.containsAnyOf(clue.getTypes())) continue;
                 
                 // If we have reached this point, then 'testHex' is a valid location
-                // for the rule, if the rule is normal
+                // for the clue, if the clue is normal
                 possibleLocations.add(testHex);
                 break;
             }
         }
         
-        if (rule.isNormal())
+        if (clue.isNormal())
         {
             return possibleLocations;
         }

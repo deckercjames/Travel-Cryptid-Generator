@@ -1,6 +1,7 @@
 package main.java.model.game.hexs;
 
-public enum Terrain implements HexTag {
+public enum Terrain implements HexTag
+{
 
     WATER("Water"),
     DESERT("Desert"),
@@ -8,15 +9,16 @@ public enum Terrain implements HexTag {
     SWAMP("Swamp"),
     MOUNTAINS("Mountains");
 
-    Terrain(String rep){
+    Terrain(String rep)
+    {
         this.rep = rep;
     }
 
     private String rep;
 
     @Override
-    public String toString(){
+    public String toString()
+    {
         return rep;
     }
-
 }

@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Rule implements Serializable
+public class Clue implements Serializable
 {
-    Rule(int range, HexTag... tags)
+    Clue(int range, HexTag... tags)
     {
         this.range = range;
         this.normal = true;
@@ -19,14 +19,14 @@ public class Rule implements Serializable
     }
 
     //negation constructor
-    private Rule(int range, boolean normal, Set<HexTag> tags)
+    private Clue(int range, boolean normal, Set<HexTag> tags)
     {
         this.range = range;
         this.normal = normal;
         this.tags = new HashSet<>(tags);
     }
 
-    //rule definition
+    // clue definition
     private int range;
     private boolean normal;
     private Set<HexTag> tags;
@@ -36,9 +36,9 @@ public class Rule implements Serializable
     public Set<HexTag> getTypes(){ return tags; }
 
 
-    Rule getNegative()
+    Clue getNegative()
     {
-        return new Rule(range, false, tags);
+        return new Clue(range, false, tags);
     }
     
     /**
@@ -46,7 +46,7 @@ public class Rule implements Serializable
      * @param r2
      * @return
      */
-    public static boolean canRulesBeUsedTogether(Rule r1, Rule r2)
+    public static boolean canCluesBeUsedTogether(Clue r1, Clue r2)
     {
         // If the ranges are different, they can be used together
         if (r1.range != r2.range)
@@ -54,13 +54,13 @@ public class Rule implements Serializable
             return true;
         }
         
-        // If the rules are negations of each other, they can not be used together
+        // If the clues are negations of each other, they can not be used together
         if (r1.tags.equals(r2.tags))
         {
             return false;
         }
         
-        // Rules about on/not_on type of terrain, must share atleast one terrain
+        // Clues about on/not_on type of terrain, must share atleast one terrain
         if (r2.range == 0) // we know the ranges are equal at this point
         {
             Set<HexTag> intersection = new HashSet<>(r1.tags);
@@ -76,8 +76,8 @@ public class Rule implements Serializable
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("Rule(");
-        sb.append(normal ? "Normal" : "Not");
+        sb.append("Clue(");
+        sb.append(normal ? "Within" : "Not Within");
         sb.append(", ");
         sb.append(range);
         sb.append(", {");

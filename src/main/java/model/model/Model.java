@@ -14,8 +14,8 @@ public class Model
     // Stores board information, all hexes and structures
     private Board board;
     
-    // For every possible rule, it stores the set of hexes that are possible for that given rule
-    private Map<Rule, Set<HexLocation>> rulesToPossibleHexes;
+    // For every possible clue, it stores the set of hexes that are possible for that given clue
+    private Map<Clue, Set<HexLocation>> cluesToPossibleHexes;
 
     public void initializeRandomBoard()
     {
@@ -29,39 +29,41 @@ public class Model
         System.out.println("  Randomizing Structures");
         this.board.randomizeStructures();
 
-        System.out.println("  Assigning hexes to Rules");
+        System.out.println("  Assigning hexes to Clues");
 
-        // Assign possible hex locations for rules
-        this.rulesToPossibleHexes = new HashMap<>();
-        for(Rule rule : RuleManager.getAllRules())
+        // Assign possible hex locations for clues
+        this.cluesToPossibleHexes = new HashMap<>();
+        for(Clue clue : ClueManager.getAllClues())
         {
-            rulesToPossibleHexes.put(rule, board.getHexesMatchingRule(rule));
+            cluesToPossibleHexes.put(clue, board.getHexesMatchingClue(clue));
         }
 
     }
     
     
-    
-    public Set<HexLocation> getPossibleLocations(Rule rule)
+    /**
+     * Returns all possible location that could be the solution on the given board for the given clue
+     */
+    public Set<HexLocation> getPossibleLocations(Clue clue)
     {
-        return this.rulesToPossibleHexes.get(rule);
+        return this.cluesToPossibleHexes.get(clue);
     }
     
     
     /**
-     * Returns all hex locations that are possible given this rule combo. This may not be a valid rule
+     * Returns all hex locations that are possible given this clue combo. This may not be a valid clue
      * combo,  in which case there may not be exactly one solution (either zero or >=2)
      * @return
      */
-    public Set<HexLocation> getSolutions(Set<Rule> rules)
+    public Set<HexLocation> getSolutions(Set<Clue> clues)
     {
-        //initial set from first rule
+        //initial set from first clue
         Set<HexLocation> solutions = new HashSet<>(board.getAllHexLocations());
 
         //retain sets possible locations from all other turles
-        for (Rule r : rules)
+        for (Clue r : clues)
         {
-            solutions.retainAll(this.rulesToPossibleHexes.get(r));
+            solutions.retainAll(this.cluesToPossibleHexes.get(r));
         }
 
         return solutions;
@@ -72,16 +74,16 @@ public class Model
      * Returns true if all possible subsets give multiple solutions.
      * false otherwise. If any subset produces one solutions then
      * the set is not fair. It is not fair, because any players
-     * that have a rule not in that subset have extranious information
+     * that have a clue not in that subset have extranious information
      * 
      * @return
      */
-    public boolean isFair(RuleCombo combo)
+    public boolean isFair(ClueCombo combo)
     {
-        RuleCombo[] subsets = combo.getAllStrictSubsets();
+        ClueCombo[] subsets = combo.getAllStrictSubsets();
 
         // check all subsets
-        for (RuleCombo comboSubset : subsets)
+        for (ClueCombo comboSubset : subsets)
         {
             // if the size of this subset is only one, we do not need to bother checking if it is fair
             // (it can't possible limit the number of possible hexes down to one)
@@ -100,21 +102,21 @@ public class Model
 
     /**
      * Returns the keys {3, 4, 5} mapped to
-     * valid, fair sets of rules for that number of players.
+     * valid, fair sets of clues for that number of players.
      *
      */
-    public RuleCombo getRandomValidFairRuleCombo(boolean hardMode, int numPlayers)
+    public ClueCombo getRandomValidFairClueCombo(boolean hardMode, int numPlayers)
     {
         Random rd = new Random();
         
-        //get the list of rules to randomly select from
-        RuleCombo[] allRuleCombos = RuleManager.getAllRuleCombos(numPlayers, hardMode);
+        //get the list of clues to randomly select from
+        ClueCombo[] allClueCombos = ClueManager.getAllClueCombos(numPlayers, hardMode);
         
         // repeatedly select a random combo until a valid, fair one is selected
         while (true)
         {
-            int index = rd.nextInt(allRuleCombos.length);
-            RuleCombo randomCombo = allRuleCombos[index];
+            int index = rd.nextInt(allClueCombos.length);
+            ClueCombo randomCombo = allClueCombos[index];
             
             if (this.getSolutions(randomCombo).size() != 1) continue;
             if (!this.isFair(randomCombo)) continue;
@@ -124,34 +126,8 @@ public class Model
     }
 
 
-    public Board getBoard(){
+    public Board getBoard()
+    {
         return board;
     }
-
-
-    // public List<RuleCombo> getAllValidFairRuleCombos(int numPlayers, boolean hardMode)
-    // {
-    //     System.out.println("copying valid fair rules over");
-
-    //     //get the valid solutions from the rules combos
-    //     List<RuleCombo> allCombos = ruleManager.getAllRuleCombos(numPlayers, hardMode);
-
-    //     List<RuleCombo> validFairCombos = new ArrayList<>(allCombos.size());
-
-    //     for(RuleCombo combo : allCombos){
-
-    //         if(combo.getValidSolution() != null && combo.isFair()) {
-
-    //             validFairCombos.add(combo);
-    //         }
-    //     }
-
-    //     System.out.println(" valid fair rules copied");
-
-    //     return validFairCombos;
-
-    // }
-
-
-
 }

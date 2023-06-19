@@ -2,6 +2,14 @@ package main.java.model.game.hexs;
 
 import java.util.Set;
 
+/**
+ * This contians all information about a given hex on the board
+ * 
+ * i.e.
+ * The Terrain
+ * Any animal territory
+ * Any Structure information (color/type)
+ */
 public class Hex
 {
     public Hex(HexTag... tags)
@@ -41,11 +49,22 @@ public class Hex
         this.structureType = type;
         this.structureColor = color;
     }
+    
+    public boolean hasStructure()
+    {
+        return structureType != null;
+    }
 
+    /**
+     * Returns true if any of the hex attributes match any of the given tags
+     * 
+     * @param tags Set of tags to compare against
+     * @return true if this hex matches
+     */
     public boolean containsAnyOf(Set<HexTag> tags)
     {
-       for(HexTag tag : tags)
-       {
+        for(HexTag tag : tags)
+        {
             if(tag == terrain || tag == animal || tag == structureType || tag == structureColor)
                 return true;
         }

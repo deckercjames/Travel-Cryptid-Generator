@@ -4,12 +4,10 @@ import main.java.model.game.hexs.Animal;
 import main.java.model.game.hexs.HexTag;
 import main.java.model.game.hexs.StructureColor;
 import main.java.model.game.hexs.Terrain;
-import main.java.model.model.RuleCombo;
 
 import java.awt.*;
 import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Settings
@@ -34,7 +32,6 @@ public class Settings
     }
 
     private static final String COLOR_SETTING_FILENAME = ".color_settings.data";
-    private static final String RULE_COMBOS_FILENAME = ".color_settings.data";
 
     private static void save(String filename, Object object)
     {
@@ -83,24 +80,4 @@ public class Settings
     {
         save(COLOR_SETTING_FILENAME, colors);
     }
-
-
-    @SuppressWarnings("unchecked")
-    public static Map<Boolean, Map<Integer, List<RuleCombo>>> loadRuleCombos()
-    {
-        try
-        {
-            return (Map<Boolean, Map<Integer, List<RuleCombo>>>) load(RULE_COMBOS_FILENAME);
-        }
-        catch (Exception ignored){}
-
-        return null;
-
-    }
-
-    public static void saveRuleCombos(Map<Boolean, Map<Integer, List<RuleCombo>>> ruleCombos)
-    {
-        save(RULE_COMBOS_FILENAME, ruleCombos);
-    }
-
 }

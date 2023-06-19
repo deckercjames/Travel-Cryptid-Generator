@@ -1,9 +1,8 @@
 package main.java.analysis.experiments;
 
 import main.java.analysis.superclasses.AnalyserMultiPlayer;
-import main.java.model.game.board.Board;
-import main.java.model.model.RuleCombo;
-import main.java.model.model.RuleManager;
+import main.java.model.model.ClueCombo;
+import main.java.model.model.ClueManager;
 
 public class SolutionSizeFrequency extends AnalyserMultiPlayer {
 
@@ -14,13 +13,13 @@ public class SolutionSizeFrequency extends AnalyserMultiPlayer {
     @Override
     protected double[] computeData(int numPlayers) {
 
-        RuleCombo[] allCombos = RuleManager.getAllRuleCombos(numPlayers, true);
+        ClueCombo[] allCombos = ClueManager.getAllClueCombos(numPlayers, true);
 
         //make a list to store the frequencies
-        double[] solutionCountFrequencies = new double[Board.SIZE+1];
+        double[] solutionCountFrequencies = new double[108+1];
 
-        //iterate through every rule combo
-        for(RuleCombo combo : allCombos){
+        //iterate through every clue combo
+        for(ClueCombo combo : allCombos){
 
             //increment the frequency of combos with that number os solutions
             solutionCountFrequencies[model.getSolutions(combo).size()]++;

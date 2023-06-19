@@ -2,9 +2,9 @@ package main.java.view.keyview;
 
 import main.java.fileio.Settings;
 import main.java.model.game.hexs.*;
-import main.java.model.model.RuleManager;
+import main.java.model.model.ClueManager;
 import main.java.view.boardview.ViewBoardImageVectors;
-import main.java.view.ruleview.RuleView;
+import main.java.view.clueview.ClueView;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,18 +13,22 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+/**
+ * This is a class with a single public static function to write a key image to a specified png file
+ */
 public class KeyView
 {
+    private KeyView() {}
     
-    final static int sizeXInPixels = 800;
-    final static int sizeYInPixels = 1100;
+    final static int sizeXInPixels = 1200;
+    final static int sizeYInPixels = 1650;
     
-    final static int textSizePixelsH1 = 50;
-    final static int textSizePixelsH2 = 35;
-    final static int textSizePixelsP = 19;
-    final static int textSizePixelsP2 = 16;
+    final static int textSizePixelsH1 = 75;
+    final static int textSizePixelsH2 = 53;
+    final static int textSizePixelsP = 29;
+    final static int textSizePixelsP2 = 24;
     
-    final static int hexSizeXInPixels = 80;
+    final static int hexSizeXInPixels = 120;
     
     private static void setFont(Graphics2D g, int size)
     {
@@ -87,15 +91,15 @@ public class KeyView
         g.setFont(g.getFont().deriveFont(textSizePixelsP));
         setFont(g, textSizePixelsH1);
         g.setColor(Color.BLACK);
-        g.drawString("Cryptid Key", 250, 70);
+        g.drawString("Cryptid Key", 375, 105);
         
         // Terrain Header
         setFont(g, textSizePixelsH2);
-        g.drawString("Terrain", 100, 120);
+        g.drawString("Terrain", 150, 180);
         // Draw one of each terrain
-        final int terrainHexesPosX = 60;
-        final int terrainHexesPosY = 140;
-        final int terrainHexesSpacing = 90;
+        final int terrainHexesPosX = 90;
+        final int terrainHexesPosY = 210;
+        final int terrainHexesSpacing = 135;
         drawTerrainHex(viewBoardImageVectors, g, Terrain.WATER,     terrainHexesPosX, terrainHexesPosY+(0*terrainHexesSpacing));
         drawTerrainHex(viewBoardImageVectors, g, Terrain.DESERT,    terrainHexesPosX, terrainHexesPosY+(1*terrainHexesSpacing));
         drawTerrainHex(viewBoardImageVectors, g, Terrain.FOREST,    terrainHexesPosX, terrainHexesPosY+(2*terrainHexesSpacing));
@@ -104,20 +108,20 @@ public class KeyView
 
         // Animal Header
         setFont(g, textSizePixelsH2);
-        g.drawString("Animal Teritory", 420, 120);
+        g.drawString("Animal Teritory", 630, 180);
         // Draw Each animal territory
-        final int animalHexesPosX = 400;
-        final int animalHexesPosY = 140;
-        final int animalHexesSpacing = 85;
+        final int animalHexesPosX = 600;
+        final int animalHexesPosY = 210;
+        final int animalHexesSpacing = 128;
         drawAnimalHex(viewBoardImageVectors, g, Animal.BEAR,        animalHexesPosX, animalHexesPosY+(0*animalHexesSpacing));
         drawAnimalHex(viewBoardImageVectors, g, Animal.COUGAR,      animalHexesPosX, animalHexesPosY+(1*animalHexesSpacing));
         
         // Structure Header
-        final int structHexesPosX = 400;
-        final int structHexesPosY = 360;
-        final int structHexesSpacing = 47;
+        final int structHexesPosX = 600;
+        final int structHexesPosY = 540;
+        final int structHexesSpacing = 71;
         setFont(g, textSizePixelsH2);
-        g.drawString("Structures", 420, structHexesPosY-10);
+        g.drawString("Structures", 630, structHexesPosY-15);
         // Draw Each animal territory
         drawStructure(viewBoardImageVectors, g, StructureType.STANDING_STONE,  StructureColor.BLACK, "Black Standing Stone",  structHexesPosX, structHexesPosY+(0*structHexesSpacing));
         drawStructure(viewBoardImageVectors, g, StructureType.STANDING_STONE,  StructureColor.GREEN, "Green Standing Stone",  structHexesPosX, structHexesPosY+(1*structHexesSpacing));
@@ -125,27 +129,27 @@ public class KeyView
         drawStructure(viewBoardImageVectors, g, StructureType.ABANDONED_SHACK, StructureColor.BLUE,  "Blue Abandoned Shack",  structHexesPosX, structHexesPosY+(3*structHexesSpacing));
         // Noe on structures
         setFont(g, textSizePixelsP2);
-        g.drawString("Note: Not all structures are listed here", structHexesPosX+20, structHexesPosY+(4*structHexesSpacing)+22);
+        g.drawString("Note: Not all structures are listed here", structHexesPosX+30, structHexesPosY+(4*structHexesSpacing)+33);
         
         // Clues Header
-        final int cluesPosX = 50;
-        final int cluesPosY = 660;
-        final int cluesSpacing = 25;
+        final int cluesPosX = 75;
+        final int cluesPosY = 990;
+        final int cluesSpacing = 38;
         setFont(g, textSizePixelsH2);
-        g.drawString("All Clues", 100, cluesPosY-30);
+        g.drawString("All Clues", 150, cluesPosY-45);
         setFont(g, textSizePixelsP);
         String[] clues = {
             "On <Terrain_1> or <Terrain_2>",
             "Within 1 of <Terrain>",
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[15]),
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[16]),
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[17]),
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[18]),
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[19]),
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[20]),
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[21]),
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[22]),
-            RuleView.getRuleAsString(RuleManager.getNormalRules()[23]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[15]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[16]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[17]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[18]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[19]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[20]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[21]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[22]),
+            ClueView.getClueAsString(ClueManager.getNormalClues()[23]),
         };
         for (int i = 0; i < clues.length; i++)
         {
@@ -156,11 +160,11 @@ public class KeyView
         g.drawString("e.g. \"Not within 2 of Cougar Territory\"", cluesPosX, cluesPosY+((clues.length+3)*cluesSpacing));
         
         // How to Play Header
-        final int howToPlayPosX = 392;
-        final int howToPlayPosY = 660;
-        final int howToPlaySpacing = 19;
+        final int howToPlayPosX = 588;
+        final int howToPlayPosY = 990;
+        final int howToPlaySpacing = 29;
         setFont(g, textSizePixelsH2);
-        g.drawString("Game Rules", 420, howToPlayPosY-30);
+        g.drawString("Game Rules", 630, howToPlayPosY-45);
         setFont(g, textSizePixelsP2);
         String[] gameRules = {
             "Each player takes a turn going clockwise.",
@@ -169,17 +173,17 @@ public class KeyView
             "     - Choose another player and ask them if",
             "       the Cryptid can be on a certain hex",
             "     - They mark that hex with a YES/NO",
-            "       according to their rule",
+            "       according to their clue",
             "     - If they mark NO, you mark a hex NO some-",
-            "       where on the board according to your rule",
+            "       where on the board according to your clue",
             " 2. Search",
             "     - Select a hex the Cryptid could be on",
-            "       according to your rule and mark it YES",
+            "       according to your clue and mark it YES",
             "     - Players continue around clockwise marking",
-            "       that hex YES/NO according to their rules",
+            "       that hex YES/NO according to their clues",
             "     - Once the first player marks it NO, the",
             "       search ends. You mark a hex as",
-            "       NO somewhere according to your rule",
+            "       NO somewhere according to your clue",
             "",
             "Win Condition",
             " - You win when you perform a Search action",

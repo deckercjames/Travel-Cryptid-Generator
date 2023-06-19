@@ -1,12 +1,12 @@
 package main.java.controller;
 
 import main.java.model.model.Model;
-import main.java.model.model.Rule;
+import main.java.model.model.Clue;
 import main.java.view.boardview.ViewBoard;
 import main.java.view.boardview.ViewBoardImageVectors;
+import main.java.view.clueview.ClueBookletView;
+import main.java.view.clueview.ClueBookletViewPDF;
 import main.java.view.keyview.KeyView;
-import main.java.view.ruleview.RuleBookletView;
-import main.java.view.ruleview.RuleBookletViewPDF;
 
 import javax.swing.*;
 import java.io.File;
@@ -40,18 +40,18 @@ public class Controller{
         }
 
         ViewBoard boardViewBoard = new ViewBoardImageVectors();
-        RuleBookletView ruleView = new RuleBookletViewPDF(outputFolder);
+        ClueBookletView clueView = new ClueBookletViewPDF(outputFolder);
 
         // player index -> number of players -> game number
-        List<Map<Integer, List<Rule>>> ruleTable = new ArrayList<>(5);
+        List<Map<Integer, List<Clue>>> clueTable = new ArrayList<>(5);
 
         //add all player maps
         for(int i = 0; i < 5; i++)
         {
-            ruleTable.add(new TreeMap<>());
+            clueTable.add(new TreeMap<>());
             for(int j = (i<3)?3:(i+1); j <= 5; j++)
             {
-                ruleTable.get(i).put(j, new ArrayList<>(numGames));
+                clueTable.get(i).put(j, new ArrayList<>(numGames));
             }
         }
 
@@ -75,22 +75,22 @@ public class Controller{
             // Output game board to a file
             boardViewBoard.outputBoard(model.getBoard(), boardImageSize, outputFolder, i, gameSetName, hardMode);
 
-            //make rules set for each number of players
+            // make clues set for each number of players
             for(int numPlayers = 3; numPlayers <= 5; numPlayers++)
             {
                 System.out.println("For "+numPlayers+" players");
                 
-                //get the rule combo for a game with k players
-                Rule[] rules = model.getRandomValidFairRuleCombo(hardMode, numPlayers).getRulesInRandomOrder();
+                //get the clues combo for a game with k players
+                Clue[] clues = model.getRandomValidFairClueCombo(hardMode, numPlayers).getCluessInRandomOrder();
 
-                for(Rule rule : rules)
-                    System.out.println(rule);
+                for(Clue clue : clues)
+                    System.out.println(clue);
 
-                //add the rule to the table
+                //add the clue to the table
                 //player j, game i, k players
                 for(int j = 0; j < numPlayers; j++)
                 {
-                    ruleTable.get(j).get(numPlayers).add(rules[j]);
+                    clueTable.get(j).get(numPlayers).add(clues[j]);
                 }
 
                 System.out.println("\n");
@@ -99,20 +99,27 @@ public class Controller{
 
         if(progressMonitor != null)
         {
-            progressMonitor.setNote("Making Rules");
+            progressMonitor.setNote("Making Clue Booklet");
             progressMonitor.setProgress(numGames+2);
         }
 
-        //output all the rules to a pdf
+        // output all the clues to a pdf
         try
         {
-            ruleView.outputRules(gameSetName, numEasyGames, ruleTable);
-            KeyView.outputKey(outputFolder);
+            clueView.outputClues(gameSetName, numEasyGames, clueTable);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+        
+        if(progressMonitor != null)
+        {
+            progressMonitor.setNote("Making Game Key");
+            progressMonitor.setProgress(numGames+2);
+        }
+
+        KeyView.outputKey(outputFolder);
         
         // Close the Progress monitor
         if(progressMonitor != null)

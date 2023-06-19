@@ -3,6 +3,12 @@ package main.java.model.game.hexs;
 import java.awt.*;
 import java.util.*;
 
+/**
+ * Does a hexagonal coordinate. Hexagonal coordinates have three integers parameters
+ * that must add up to zero
+ * 
+ * This class is immutable
+ */
 public class HexLocation
 {
     public HexLocation(int x, int y, int z)
@@ -28,14 +34,24 @@ public class HexLocation
         return new Dimension(x, y);
     }
 
+    /**
+     * Returns a new hex location that is the result of rotating
+     * this position 180 degrees about the origin
+     * 
+     * @return
+     */
     public HexLocation rotate180()
     {
         return new HexLocation(-x, -y, -z);
     }
 
+    /**
+     * Returns a new hex location that is the result of shifting the location by the given deltas
+     * If the given deltas cause the resulting location to be an invalid hex coordinate, a runtime exception is thrown
+     */
     private HexLocation translate(int dx, int dy, int dz)
     {
-        return  new HexLocation(x+dx, y+dy, z+dz);
+        return new HexLocation(x+dx, y+dy, z+dz);
     }
 
     public HexLocation translate(HexLocation delta)
@@ -66,7 +82,11 @@ public class HexLocation
     }
 
 
-
+    /**
+     * Returns the "manhattan" distance of a hex from the origin. The z coordinate of the
+     * hex is implied since hex coordinates are restrict to be (x+y+z)=0. The manhattan distance
+     * is measured in standard hex movements, not just x+y distance
+     */
     private static int manhattanDistFromOrigin(int x, int y)
     {
         int sum = 0;
@@ -76,32 +96,44 @@ public class HexLocation
         return sum / 2;
     }
 
-
-
-    private static final Map<Integer, Set<HexLocation>> neighbors;
-    static
+    /**
+     * Caches the set of hexlocations that are within that disance of the origin
+     * 
+     * e.g.
+     * size(neighbors[0]) = 1
+     * size(neighbors[1]) = 7
+     * size(neighbors[2]) = 19
+     * size(neighbors[3]) = 37
+     */
+    private static final Map<Integer, Set<HexLocation>> neighborsCache = new HashMap<>();
+    static void addNeighborDistanceToCache(int dist)
     {
-        neighbors = new TreeMap<>();
-        for(int k = 0; k <= 3; k++)
+        //create set of all hexes k away from origin
+        Set<HexLocation> set = new HashSet<>();
+        //test all possible locations
+        for(int x = -dist; x <= dist; x++)
         {
-            //create set of all hexes k away from origin
-            Set<HexLocation> set = new HashSet<>();
-            //test all possible locations
-            for(int x = -k; x <= k; x++)
+            for(int y = -dist; y <= dist; y++)
             {
-                for(int y = -k; y <= k; y++)
-                {
-                    if(manhattanDistFromOrigin(x, y) > k) continue;
-                    set.add(new HexLocation(x, y));
-                }
+                if(manhattanDistFromOrigin(x, y) > dist) continue;
+                set.add(new HexLocation(x, y));
             }
-            neighbors.put(k, set);
         }
+        neighborsCache.put(dist, set);
     }
 
+    /**
+     * Returns the set of hex locations that are withing dist of the
+     * origin
+     */
     public static Set<HexLocation> getSurrounding(int dist)
     {
-        return neighbors.get(dist);
+        if (!neighborsCache.containsKey(dist))
+        {
+            addNeighborDistanceToCache(dist);
+        }
+            
+        return neighborsCache.get(dist);
     }
 
 }

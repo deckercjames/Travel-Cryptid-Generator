@@ -1,7 +1,6 @@
 package main.java.model.stats;
 
-import main.java.model.game.board.Board;
-import main.java.model.model.Rule;
+import main.java.model.model.Clue;
 import main.java.model.game.hexs.HexLocation;
 
 import java.util.Set;
@@ -10,7 +9,7 @@ public class RuleComboStats {
 
     public RuleComboStats(int numRules){
         this.numRules = numRules;
-        frequencyCount = new int[Board.SIZE+1];
+        frequencyCount = new int[108+1];
     }
 
     private final int numRules;
@@ -19,7 +18,7 @@ public class RuleComboStats {
 
     //after running a brute force recursion, these wil be reset
     //sets of valid rules combos
-    private Set<Set<Rule>> validCombos;
+    private Set<Set<Clue>> validCombos;
     //all the locations that the valid combos limit to
     private Set<HexLocation> validSolutionLocations;
 
@@ -47,7 +46,7 @@ public class RuleComboStats {
         return frequencyCount[1];
     }
 
-    public void addValidRuleCombo(Set<Rule> rulesCombo, HexLocation solution){
+    public void addValidRuleCombo(Set<Clue> rulesCombo, HexLocation solution){
         validCombos.add(rulesCombo);
         validSolutionLocations.add(solution);
     }

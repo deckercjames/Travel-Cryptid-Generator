@@ -1,6 +1,6 @@
-package main.java.view.ruleview;
+package main.java.view.clueview;
 
-import main.java.model.model.Rule;
+import main.java.model.model.Clue;
 
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
@@ -21,9 +21,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class RuleBookletViewPDF extends RuleBookletView {
+public class ClueBookletViewPDF extends ClueBookletView {
 
-    public RuleBookletViewPDF(File outputFile){
+    public ClueBookletViewPDF(File outputFile){
         this.dest = outputFile;
     }
 
@@ -81,7 +81,7 @@ public class RuleBookletViewPDF extends RuleBookletView {
 
     }
 
-    private void makeNumPlayersRow(BaseTable table, int numPlayers, List<Rule> rulesByGame)
+    private void makeNumPlayersRow(BaseTable table, int numPlayers, List<Clue> cluesByGame)
     {
         Row<PDPage> row = table.createRow(20);
 
@@ -89,11 +89,11 @@ public class RuleBookletViewPDF extends RuleBookletView {
         labelCell.setFont(fontPlain);
         labelCell.setFontSize(9);
 
-        float ruleCellWidth = (100.0f - LEFT_COLUMN_WIDTH) / rulesByGame.size();
+        float clueCellWidth = (100.0f - LEFT_COLUMN_WIDTH) / cluesByGame.size();
 
-        for (Rule rule : rulesByGame)
+        for (Clue clue : cluesByGame)
         {
-            Cell<PDPage> cell = row.createCell(ruleCellWidth, RuleView.getRuleAsString(rule));
+            Cell<PDPage> cell = row.createCell(clueCellWidth, ClueView.getClueAsString(clue));
             cell.setFont(fontPlain);
             cell.setFontSize(9);
         }
@@ -101,7 +101,7 @@ public class RuleBookletViewPDF extends RuleBookletView {
     }
 
     @Override
-    public void outputRules(String gameSetName, int numEasyGames, List<Map<Integer, List<Rule>>> ruleTables) throws IOException
+    public void outputClues(String gameSetName, int numEasyGames, List<Map<Integer, List<Clue>>> clueTables) throws IOException
     {
         //truncate game set name so it fits in one line (yeah its a work around)
         BufferedImage bi = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
@@ -121,7 +121,7 @@ public class RuleBookletViewPDF extends RuleBookletView {
         g.dispose();
         gameSetName = gameSetNameMod;
 
-        //ruleTable: player index -> number of players -> game number
+        // clueTable: player index -> number of players -> game number
 
         System.out.println("\ncreating pdf");
 
@@ -146,19 +146,19 @@ public class RuleBookletViewPDF extends RuleBookletView {
         BaseTable table = new BaseTable(0, yStartNewPage,
                 bottomMargin, tableWidth, margin, document, page, true, true);
 
-        //create each players rules
-        for(int i = 0; i < ruleTables.size(); i++)
+        //create each players clues
+        for(int i = 0; i < clueTables.size(); i++)
         {
             System.out.println("Table for player "+i);
 
             makeTitleRow(table, i, gameSetName);
 
-            makeHeaderRow(table, ruleTables.get(0).get(5).size(), numEasyGames);
+            makeHeaderRow(table, clueTables.get(0).get(5).size(), numEasyGames);
 
-            //create the rule rows for each number of games
-            for(Map.Entry<Integer, List<Rule>> rulesByGame : ruleTables.get(i).entrySet())
+            //create the clue rows for each number of games
+            for(Map.Entry<Integer, List<Clue>> cluesByGame : clueTables.get(i).entrySet())
             {
-                makeNumPlayersRow(table, rulesByGame.getKey(), rulesByGame.getValue());
+                makeNumPlayersRow(table, cluesByGame.getKey(), cluesByGame.getValue());
             }
         }
 

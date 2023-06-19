@@ -1,16 +1,15 @@
 package main.java.analysis.experiments;
 
 import main.java.analysis.superclasses.AnalyserHistogram;
-import main.java.model.game.board.Board;
-import main.java.model.model.RuleManager;
-import main.java.model.model.Rule;
+import main.java.model.model.ClueManager;
+import main.java.model.model.Clue;
 
 import java.util.Arrays;
 
 public class SpecificRuleCoverage extends AnalyserHistogram {
 
     public SpecificRuleCoverage(double binSize, int ruleIndex) {
-        super(RuleManager.getNormalRules()[ruleIndex].toString(), binSize);
+        super(ClueManager.getNormalClues()[ruleIndex].toString(), binSize);
         System.out.println("bin size: "+binSize);
         this.binCount = (int) (1.0/binSize) + 1;
         this.ruleIndex = ruleIndex;
@@ -26,8 +25,8 @@ public class SpecificRuleCoverage extends AnalyserHistogram {
     @Override
     protected double computeDatum()
     {
-        Rule rule = RuleManager.getNormalRules()[ruleIndex];
-        return (double) model.getPossibleLocations(rule).size() / Board.SIZE;
+        Clue rule = ClueManager.getNormalClues()[ruleIndex];
+        return (double) model.getPossibleLocations(rule).size() / 108;
     }
 
     @Override
