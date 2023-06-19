@@ -2,6 +2,7 @@ package main.java.main;
 
 import main.java.analysis.superclasses.Analyser;
 import main.java.gui.CryptidGUI;
+
 import main.java.analysis.experiments.RuleCoverage;
 import main.java.analysis.experiments.SolutionSizeFrequency;
 import main.java.analysis.experiments.SpecificRuleCoverage;

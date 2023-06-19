@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Rule implements Serializable {
-
+public class Rule implements Serializable
+{
     Rule(int range, HexTag... tags)
     {
         this.range = range;
@@ -40,6 +40,37 @@ public class Rule implements Serializable {
     {
         return new Rule(range, false, tags);
     }
+    
+    /**
+     * @param r1
+     * @param r2
+     * @return
+     */
+    public static boolean canRulesBeUsedTogether(Rule r1, Rule r2)
+    {
+        // If the ranges are different, they can be used together
+        if (r1.range != r2.range)
+        {
+            return true;
+        }
+        
+        // If the rules are negations of each other, they can not be used together
+        if (r1.tags.equals(r2.tags))
+        {
+            return false;
+        }
+        
+        // Rules about on/not_on type of terrain, must share atleast one terrain
+        if (r2.range == 0) // we know the ranges are equal at this point
+        {
+            Set<HexTag> intersection = new HashSet<>(r1.tags);
+            intersection.retainAll(r2.tags);
+            if (intersection.size() == 0) return false;
+            if (intersection.size() == r1.tags.size() || intersection.size() == r2.tags.size()) return false;
+        }
+        
+        return true;
+    }
 
     @Override
     public String toString()
@@ -61,10 +92,12 @@ public class Rule implements Serializable {
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode()
+    {
         int hash = this.range * 17;
         if(normal) hash += 113;
-        for(HexTag tag : tags){
+        for(HexTag tag : tags)
+        {
             hash += tag.hashCode() * 397;
         }
         return hash;

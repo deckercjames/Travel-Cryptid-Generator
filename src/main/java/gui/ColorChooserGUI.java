@@ -15,9 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-class ColorChooserGUI extends JFrame implements ActionListener, ChangeListener {
-
-    ColorChooserGUI(CryptidGUI viewGUI){
+class ColorChooserGUI extends JFrame implements ActionListener, ChangeListener
+{
+    ColorChooserGUI(CryptidGUI viewGUI)
+    {
         super("Cryptid Color Selector");
 
         this.viewGUI = viewGUI;
@@ -53,13 +54,16 @@ class ColorChooserGUI extends JFrame implements ActionListener, ChangeListener {
     private JButton cancelButton;
     private JButton saveButton;
 
-    private void initBoard(){
+    private void initBoard()
+    {
         testBoard = new HashMap<>();
         Random rd = new Random();
-        for(int x = 0; x < 12; x++){
+        for(int x = 0; x < 12; x++)
+        {
             final int startY = -((x+1)/2);
             final int endY = startY - 8;
-            for(int y = startY; y > endY; y--){
+            for(int y = startY; y > endY; y--)
+            {
                 Hex hex = new Hex(Terrain.values()[rd.nextInt(5)]);
                 if(Math.random() < 0.4)
                     hex = new Hex(Terrain.values()[rd.nextInt(5)], Animal.values()[rd.nextInt(2)]);
@@ -70,26 +74,30 @@ class ColorChooserGUI extends JFrame implements ActionListener, ChangeListener {
         }
     }
 
-    private void makeRadioButton(HexTag tag){
+    private void makeRadioButton(HexTag tag)
+    {
         JRadioButton button = new JRadioButton(tag.toString());
         buttonTagMap.put(button, tag);
         button.addActionListener(this);
         colorOptionGroup.add(button);
         colorOptionPanel.add(button);
 
-        if(tag == Terrain.WATER){
+        if(tag == Terrain.WATER)
+        {
             selectedTag = tag;
             button.setSelected(true);
         }
     }
 
-    private void init(){
-
+    private void init()
+    {
         this.setLayout(new BorderLayout());
 
-        JPanel boardPanel = new JPanel() {
+        JPanel boardPanel = new JPanel()
+        {
             @Override
-            public void paintComponent(Graphics g1) {
+            public void paintComponent(Graphics g1)
+            {
                 super.paintComponent(g1);
 
                 Graphics2D g = (Graphics2D) g1;
@@ -103,7 +111,6 @@ class ColorChooserGUI extends JFrame implements ActionListener, ChangeListener {
                 ViewBoardImageVectors viewBoardImageVectors = new ViewBoardImageVectors();
 
                 viewBoardImageVectors.drawHexes(g, testBoard.entrySet().iterator(), hexSizeX, new Dimension(), tagColorMap);
-
             }
         };
         this.add(boardPanel, BorderLayout.CENTER);
@@ -153,16 +160,14 @@ class ColorChooserGUI extends JFrame implements ActionListener, ChangeListener {
         this.setLocationRelativeTo(null);
         this.setResizable(true);
         this.setVisible(true);
-
     }
 
-    private void colorChooserClosed(){
-
+    private void colorChooserClosed()
+    {
         this.dispose();
         this.setVisible(false);
 
         viewGUI.setVisible(true);
-
     }
 
     @Override
@@ -178,25 +183,24 @@ class ColorChooserGUI extends JFrame implements ActionListener, ChangeListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-
+    public void actionPerformed(ActionEvent e)
+    {
         System.out.println("Action performed");
 
-        if(e.getSource() == cancelButton){
-
+        if(e.getSource() == cancelButton)
+        {
             colorChooserClosed();
-
-        }else if(e.getSource() == saveButton){
-
+        }
+        else if(e.getSource() == saveButton)
+        {
             Settings.saveColors(tagColorMap);
 
             colorChooserClosed();
-
-        }else if(e.getSource() instanceof JRadioButton){
+        }
+        else if(e.getSource() instanceof JRadioButton)
+        {
             selectedTag = buttonTagMap.get(e.getSource());
             colorChooser.setColor(tagColorMap.get(selectedTag));
         }
-
     }
-
 }

@@ -15,8 +15,8 @@ import java.util.Map;
 public class Settings
 {
     private static Map<HexTag, Color> defaultColors;
-    static{
-
+    static
+    {
         defaultColors = new HashMap<>();
         defaultColors.put(Terrain.WATER,        new Color(0, 132, 255));
         defaultColors.put(Terrain.SWAMP,        new Color(101, 48, 36));
@@ -31,7 +31,6 @@ public class Settings
         defaultColors.put(StructureColor.WHITE, new Color(255, 255, 255));
         defaultColors.put(StructureColor.BLUE,  new Color(0, 0, 255));
         defaultColors.put(StructureColor.GREEN, new Color(0, 255, 0));
-
     }
 
     private static final String COLOR_SETTING_FILENAME = ".color_settings.data";

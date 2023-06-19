@@ -4,6 +4,7 @@ import main.java.model.model.Model;
 import main.java.model.model.Rule;
 import main.java.view.boardview.ViewBoard;
 import main.java.view.boardview.ViewBoardImageVectors;
+import main.java.view.keyview.KeyView;
 import main.java.view.ruleview.RuleBookletView;
 import main.java.view.ruleview.RuleBookletViewPDF;
 
@@ -106,6 +107,7 @@ public class Controller{
         try
         {
             ruleView.outputRules(gameSetName, numEasyGames, ruleTable);
+            KeyView.outputKey(outputFolder);
         }
         catch (Exception e)
         {

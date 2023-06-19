@@ -24,7 +24,7 @@ public class Model
         this.board = new BoardSectioned();
 
         System.out.println("  Randomizing Tiles");
-        this.board.randomizeTiles();
+        this.board.randomizeHexes();
 
         System.out.println("  Randomizing Structures");
         this.board.randomizeStructures();

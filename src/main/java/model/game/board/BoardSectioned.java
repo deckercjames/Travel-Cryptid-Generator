@@ -14,7 +14,7 @@ public class BoardSectioned extends Board {
 
 
     @Override
-    public void randomizeTiles(){
+    public void randomizeHexes(){
 
         HexLocation rotateTranslation = new HexLocation(5, -5, 0);
 

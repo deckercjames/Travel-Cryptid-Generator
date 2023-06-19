@@ -170,7 +170,7 @@ public class RuleBookletViewPDF extends RuleBookletView {
         contentStream.endText();
         contentStream.close();
         document.addPage(page);
-        String path = Paths.get(dest.toString(), "Rules.pdf").toString();
+        String path = Paths.get(dest.toString(), "Clues.pdf").toString();
         document.save(path);
         document.close();
 

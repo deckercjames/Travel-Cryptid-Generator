@@ -12,6 +12,8 @@ import java.util.HashMap;
 
 public class RuleManager
 {
+    private RuleManager() {}
+    
     private static Rule[] normalRules = {
             //one of two types of terrain
             new Rule(0, Terrain.FOREST, Terrain.DESERT),
@@ -54,7 +56,8 @@ public class RuleManager
     //true = hard mode, false = easy mode
 
 
-    static {
+    static
+    {
         //create the negative rules and add all the rules to 'allRules'
         allRules = new Rule[normalRules.length * 2];
         for(int i = 0; i < normalRules.length; i++)
@@ -69,8 +72,8 @@ public class RuleManager
         for (int numPlayers = 3; numPlayers <= 5; numPlayers++)
         {
             Map<Boolean, RuleCombo[]> modeToRuleCombos = new HashMap<>();
-            modeToRuleCombos.put(true, getAllCombos(numPlayers, true));
             modeToRuleCombos.put(false, getAllCombos(numPlayers, false));
+            modeToRuleCombos.put(true,  getAllCombos(numPlayers, true));
             allRuleCombosByPlayerNumberAndMode.put(numPlayers, modeToRuleCombos);
         }
 
@@ -86,8 +89,6 @@ public class RuleManager
     {
         return allRules;
     }
-
-
 
     public static RuleCombo[] getAllRuleCombos(int numPlayers, boolean hardMode)
     {
@@ -113,11 +114,24 @@ public class RuleManager
         // add a new rule to the set
         for(int i = newRuleStartIndex; i < usingRules.length; i++)
         {
+            Rule ruleToAdd = usingRules[i];
+            
+            // if adding rule i, to the current combo would create an inherent contradiction, do not bother recursing
+            boolean isContradiction = false;
+            for (Rule r : combo)
+            {
+                if (Rule.canRulesBeUsedTogether(r, ruleToAdd)) continue;
+                
+                isContradiction = true;
+                break;
+            }
+            if (isContradiction) continue;
+
             //duplicate the combo
             RuleCombo combo2 = new RuleCombo(combo);
-
+            
             //add the next rule to the duplicate
-            combo2.add(usingRules[i]);
+            combo2.add(ruleToAdd);
 
             //recurse
             makeAllCombos(usingRules, numPlayers, i+1, combo2, allCombos);
@@ -135,6 +149,9 @@ public class RuleManager
 
         //start recursion
         makeAllCombos(usingRules, numPlayers, 0, new RuleCombo(), allCombos);
+        
+        // Remove all rule combos with two or more terrain rule (on/not_on Terrain1 or Terrain2)
+        // Its very unlikely that there
 
         return allCombos.toArray(new RuleCombo[allCombos.size()]);
     }
@@ -153,6 +170,4 @@ public class RuleManager
         }
         return comboCount;
     }
-
-
 }

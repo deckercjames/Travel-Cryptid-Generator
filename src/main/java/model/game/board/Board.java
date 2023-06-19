@@ -20,7 +20,7 @@ public abstract class Board
 
     public Iterator<Map.Entry<HexLocation, Hex>> getBoardIterator(){ return board.entrySet().iterator(); }
 
-    public abstract void randomizeTiles();
+    public abstract void randomizeHexes();
 
     public void randomizeStructures()
     {

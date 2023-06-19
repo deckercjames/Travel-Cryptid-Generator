@@ -37,9 +37,9 @@ public class RuleView
         else if (rule.getRange() == 2)
         {
             if (firstTag == StructureType.ABANDONED_SHACK)
-                str.append("Abandoned Shack");
+                str.append("an Abandoned Shack");
             else if (firstTag == StructureType.STANDING_STONE)
-                str.append("Standing Stone");
+                str.append("a Standing Stone");
             else {
                 str.append(firstTag);
             }
